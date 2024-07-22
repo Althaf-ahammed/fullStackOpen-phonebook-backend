@@ -29,7 +29,11 @@ app.get('/api/persons',(request,response)=> {
     response.json(phonebook)
 })
 
-const PORT = 3000
+app.get('/info',(requset,response)=> {
+    response.send(`Phonebook has info of ${phonebook.length} people <br> <br> ${Date()}`)
+})
+
+const PORT = 3001
 app.listen(PORT,()=> {
     console.log(`port is running on ${PORT}`);
 })
