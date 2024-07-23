@@ -1,7 +1,9 @@
 const express = require("express");
 const app = express();
 
-const phonebooks = [
+app.use(express.json())
+
+let phonebooks = [
   {
     id: "1",
     name: "Arto Hellas",
@@ -23,6 +25,10 @@ const phonebooks = [
     number: "39-23-6423122",
   },
 ];
+
+const generateId = () => {
+  return Math.floor(Math.random() * 1000000).toString()
+}
 
 app.get("/api/persons", (request, response) => {
   response.json(phonebooks);
@@ -48,6 +54,16 @@ app.delete("/api/persons/:id", (request, response) => {
   const persons = phonebooks.filter((phonebook) => phonebook.id != id);
   response.status(204).end();
 });
+
+app.post('/api/persons',(request,response)=> {
+  const body = request.body
+
+  const newPerson = {id: generateId(),name:body.name,number:body.number}
+
+  phonebooks = phonebooks.concat(newPerson)
+  response.json(newPerson)
+
+})
 
 const PORT = 3001;
 app.listen(PORT, () => {
