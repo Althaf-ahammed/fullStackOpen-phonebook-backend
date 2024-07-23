@@ -2,7 +2,7 @@
 const express = require('express')
 const app = express()
 
-const phonebook = [
+const phonebooks = [
     { 
       "id": "1",
       "name": "Arto Hellas", 
@@ -26,11 +26,20 @@ const phonebook = [
 ]
 
 app.get('/api/persons',(request,response)=> {
-    response.json(phonebook)
+    response.json(phonebooks)
 })
 
 app.get('/info',(requset,response)=> {
-    response.send(`Phonebook has info of ${phonebook.length} people <br> <br> ${Date()}`)
+    response.send(`Phonebook has info of ${phonebooks.length} people <br> <br> ${Date()}`)
+})
+
+app.get('/api/persons/:id',(request,response)=> {
+  const id = request.params.id
+  const person = phonebooks.filter((Phonebook)=> Phonebook.id === id)
+  if(person.length === 0) {
+    return response.status(404).json({error: '404 Not Found' })
+  }
+  response.json(person)
 })
 
 const PORT = 3001
