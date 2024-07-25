@@ -1,7 +1,10 @@
 const express = require("express");
+const morgan = require('morgan')
+
 const app = express();
 
-app.use(express.json())
+app.use(express.json());
+app.use(morgan('tiny'))
 
 let phonebooks = [
   {
@@ -27,8 +30,8 @@ let phonebooks = [
 ];
 
 const generateId = () => {
-  return Math.floor(Math.random() * 1000000).toString()
-}
+  return Math.floor(Math.random() * 1000000).toString();
+};
 
 app.get("/api/persons", (request, response) => {
   response.json(phonebooks);
@@ -55,15 +58,27 @@ app.delete("/api/persons/:id", (request, response) => {
   response.status(204).end();
 });
 
-app.post('/api/persons',(request,response)=> {
-  const body = request.body
+app.post("/api/persons", (request, response) => {
+  const body = request.body;
 
-  const newPerson = {id: generateId(),name:body.name,number:body.number}
+  if (!body.name) {
+    return response.status(400).json({ error: "name field is required" });
+  }
 
-  phonebooks = phonebooks.concat(newPerson)
-  response.json(newPerson)
+  if (!body.number) {
+    return response.status(400).json({ error: "number field is required" });
+  }
 
-})
+  const nameExit = phonebooks.some((phonebook) => phonebook.name === body.name);
+  if (nameExit) {
+    return response.status(400).json({ error: "name must be unique" });
+  }
+
+  const newPerson = { id: generateId(), name: body.name, number: body.number };
+
+  phonebooks = phonebooks.concat(newPerson);
+  response.json(newPerson);
+});
 
 const PORT = 3001;
 app.listen(PORT, () => {
