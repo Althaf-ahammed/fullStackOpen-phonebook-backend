@@ -38,10 +38,6 @@ let phonebooks = [
   },
 ];
 
-const generateId = () => {
-  return Math.floor(Math.random() * 1000000).toString();
-};
-
 app.get("/api/persons", (request, response) => {
   Person.find({}).then((result) => {
     response.json(result);
@@ -72,23 +68,27 @@ app.delete("/api/persons/:id", (request, response) => {
 app.post("/api/persons", (request, response) => {
   const body = request.body;
 
-  if (!body.name) {
-    return response.status(400).json({ error: "name field is required" });
-  }
+  // if (!body.name) {
+  //   return response.status(400).json({ error: "name field is required" });
+  // }
 
-  if (!body.number) {
-    return response.status(400).json({ error: "number field is required" });
-  }
+  // if (!body.number) {
+  //   return response.status(400).json({ error: "number field is required" });
+  // }
 
-  const nameExit = phonebooks.some((phonebook) => phonebook.name === body.name);
-  if (nameExit) {
-    return response.status(400).json({ error: "name must be unique" });
-  }
+  // const nameExit = phonebooks.some((phonebook) => phonebook.name === body.name);
+  // if (nameExit) {
+  //   return response.status(400).json({ error: "name must be unique" });
+  // }
 
-  const newPerson = { id: generateId(), name: body.name, number: body.number };
+  const person = new Person({
+    name:body.name,
+    number:body.number
+  })
 
-  phonebooks = phonebooks.concat(newPerson);
-  response.json(newPerson);
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
 });
 
 const PORT = process.env.PORT;
