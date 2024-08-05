@@ -17,7 +17,7 @@ const phoneSchema = new mongoose.Schema({
     number: String,
   });
 
-  phoneSchema.set('toJson',{
+  phoneSchema.set('toJSON',{
     transform: (document, returnedObject) => {
         returnedObject.id = returnedObject._id.toString()
         delete returnedObject._id
