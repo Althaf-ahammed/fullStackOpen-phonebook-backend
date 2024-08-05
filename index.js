@@ -29,13 +29,11 @@ app.get("/info", (requset, response) => {
   );
 });
 
-app.get("/api/persons/:id", (request, response) => {
+app.get("/api/persons/:id", (request, response, next) => {
   const id = request.params.id;
-  const person = phonebooks.filter((Phonebook) => Phonebook.id === id);
-  if (person.length === 0) {
-    return response.status(404).json({ error: "404 Not Found" });
-  }
-  response.json(person);
+  Person.findById(id)
+    .then((result) => response.json(result))
+    .catch((error) => next(error));
 });
 
 app.delete("/api/persons/:id", (request, response, next) => {
@@ -79,7 +77,7 @@ app.post("/api/persons", (request, response, next) => {
 app.put("/api/persons/:id", (request, response, next) => {
   const id = request.params.id;
 
-  const person = { name: request.body.name, number: request.body.number };  
+  const person = { name: request.body.name, number: request.body.number };
 
   Person.findByIdAndUpdate(id, person, { new: true })
     .then((updatedNote) => {
