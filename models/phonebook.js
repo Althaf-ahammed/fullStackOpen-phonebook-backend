@@ -16,11 +16,18 @@ const phoneSchema = new mongoose.Schema({
     name: {
         type: String,
         minlength: [3, 'Name must be at least 3 characters long'],
-        required: true
+        required: [true, 'Name is required']
     },
     number: {
         type: String,
-        required: true
+    required: [true, 'Phone number is required'],
+    validate: {
+      validator: function (v) {
+        return /^\d{2,3}-\d{5,}$/.test(v);
+      },
+      message: (props) =>
+        `${props.value} is not a valid phone number! A valid phone number must have a length of 8 or more and match the pattern: xx-xxxxx or xxx-xxxxx.`,
+    },
     }
 });
 
