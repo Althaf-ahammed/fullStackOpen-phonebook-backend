@@ -26,10 +26,10 @@ export default [
         'error',
         2
       ],
-      '@stylistic/js/linebreak-style': [
-        'error',
-        'unix'
-      ],
+      // '@stylistic/js/linebreak-style': [
+      //   'error',
+      //   'unix'
+      // ],
       '@stylistic/js/quotes': [
         'error',
         'single'
